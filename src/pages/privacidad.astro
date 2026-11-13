@@ -1,0 +1,30 @@
+---
+import Document from '../layouts/Document.astro';
+import { contactEmail, path } from '../site';
+---
+<Document title="Política de privacidad" description="Cómo el Grupo 3 de TicketHN trata los datos personales en la app Android y cómo puedes ejercer control sobre tu cuenta.">
+  <section aria-labelledby="datos">
+    <h2 id="datos">Datos que usamos y para qué</h2>
+    <ul>
+      <li><strong>Cuenta.</strong> Usamos tu nombre y correo para crear e identificar tu cuenta, verificar tu dirección e iniciar sesión. Usamos tu contraseña para autenticarte y almacenamos una versión derivada con bcrypt.</li>
+      <li><strong>Sesiones y seguridad.</strong> El servicio utiliza identificadores de sesión, marcas de tiempo, dirección IP y el identificador técnico del cliente para administrar sesiones y limitar solicitudes abusivas.</li>
+      <li><strong>Datos en el teléfono.</strong> Android guarda el estado de bienvenida, los datos de sesión y tus preferencias, como el nombre visible, la ciudad elegida y los ajustes de avisos. También guarda la solicitud de organizador y las tarjetas ficticias que selecciones en la demostración.</li>
+      <li><strong>Eventos y boletos.</strong> El catálogo, los pagos y los boletos QR son de demostración. La app usa la ciudad que elijas y el botón del mapa abre un servicio externo para mostrar el recinto.</li>
+    </ul>
+  </section>
+  <section aria-labelledby="proveedores">
+    <h2 id="proveedores">Servicios que procesan datos</h2>
+    <p>Google Cloud Run aloja la API y Supabase aloja la base de datos. Resend recibe tu dirección de correo y el contenido necesario para enviar códigos de verificación o recuperación. Si abres la ubicación de un recinto en Google Maps, Google procesa esa interacción según su propia política.</p>
+  </section>
+  <section aria-labelledby="seguridad">
+    <h2 id="seguridad">Protección y retención</h2>
+    <p>La app se comunica con la API mediante HTTPS. El servidor guarda valores derivados de las contraseñas, los códigos y los tokens de renovación. Los códigos y tokens tienen plazos de validez. El vencimiento de una credencial y la eliminación de sus registros son procesos distintos.</p>
+    <p>Conservamos los datos de cuenta mientras esté activa. Al atender una solicitud de eliminación, el equipo tramita el borrado de la cuenta, las sesiones y los datos asociados. Si corresponde conservar algún registro por seguridad, prevención de fraude u obligación legal, el equipo indicará qué conserva, por qué y por cuánto tiempo al responder a la solicitud.</p>
+    <p>Puedes retirar los datos guardados en tu teléfono desde los ajustes de Android, en la sección de almacenamiento de TicketHN.</p>
+  </section>
+  <section aria-labelledby="derechos">
+    <h2 id="derechos">Contacto y eliminación</h2>
+    <p>Para consultas de privacidad, acceso o corrección de datos, escribe al equipo de TicketHN a <a class="break-all" href={'mailto:' + contactEmail}>{contactEmail}</a>.</p>
+    <p>Para borrar tu cuenta y los datos asociados, visita <a href={path('eliminar-cuenta/')}>Eliminar mi cuenta de TicketHN</a>.</p>
+  </section>
+</Document>

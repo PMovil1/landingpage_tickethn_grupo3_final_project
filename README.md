@@ -1,46 +1,11 @@
-# Astro Starter Kit: Basics
+# TicketHN web
 
-```sh
-pnpm create astro@latest -- --template basics
-```
+Sitio estático de TicketHN, creado con Astro y Tailwind CSS. Ejecuta `pnpm build` para compilarlo y publica el contenido de `dist/` en tu hosting.
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+## Android y Google Play
 
-## 🚀 Project Structure
+- Los botones de descarga abren la ficha de TicketHN en Google Play. La URL de la ficha se define en src/site.ts.
+- En Play Console, registra las URL públicas HTTPS de `/privacidad/` y `/eliminar-cuenta/` en los campos de política de privacidad y eliminación de cuenta. El correo público está en `src/site.ts`.
+- Antes de enviar la app a revisión, incorpora los enlaces de privacidad y eliminación dentro de Android, verifica que el equipo reciba y pueda tramitar las solicitudes de borrado y confirma la política de retención real de la infraestructura. Completa la sección Seguridad de los datos de Play Console de acuerdo con la versión que vas a publicar.
 
-Inside of your Astro project, you'll see the following folders and files:
-
-```text
-/
-├── public/
-│   └── favicon.svg
-├── src
-│   ├── assets
-│   │   └── astro.svg
-│   ├── components
-│   │   └── Welcome.astro
-│   ├── layouts
-│   │   └── Layout.astro
-│   └── pages
-│       └── index.astro
-└── package.json
-```
-
-To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
-
-## 🧞 Commands
-
-All commands are run from the root of the project, from a terminal:
-
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `pnpm install`             | Installs dependencies                            |
-| `pnpm dev`             | Starts local dev server at `localhost:4321`      |
-| `pnpm build`           | Build your production site to `./dist/`          |
-| `pnpm preview`         | Preview your build locally, before deploying     |
-| `pnpm astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `pnpm astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+[Política de datos de usuario de Google Play](https://support.google.com/googleplay/android-developer/answer/18265346#privacy-policy) · [Requisitos de eliminación de cuentas](https://support.google.com/googleplay/android-developer/answer/13327111?hl=es)

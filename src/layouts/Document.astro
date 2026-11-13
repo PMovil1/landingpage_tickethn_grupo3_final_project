@@ -1,0 +1,21 @@
+---
+import Layout from './Layout.astro';
+import { path } from '../site';
+
+interface Props {
+  title: string;
+  description: string;
+}
+
+const { title, description } = Astro.props;
+---
+<Layout title={title + ' | TicketHN'} description={description}>
+  <article class="shell py-12 sm:py-20">
+    <a href={path('')} class="text-link text-sm text-cobalt">Volver al inicio</a>
+    <h1 class="display-title mt-6 max-w-4xl">{title}</h1>
+    <p class="mt-5 max-w-2xl text-lg leading-8 text-muted">{description}</p>
+    <div class="document-body mt-10 border-t border-line pt-10 sm:mt-14">
+      <slot />
+    </div>
+  </article>
+</Layout>

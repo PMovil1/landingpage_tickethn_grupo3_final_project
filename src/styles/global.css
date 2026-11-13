@@ -1,0 +1,53 @@
+@import "tailwindcss";
+
+@font-face {
+  font-family: Inter;
+  src: url("../assets/inter_variable.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+@theme {
+  --font-sans: Inter, system-ui, sans-serif;
+  --color-navy: #0b1f4d;
+  --color-night: #091429;
+  --color-cobalt: #2563eb;
+  --color-emerald: #10b981;
+  --color-canvas: #f7f9fc;
+  --color-muted: #52627a;
+  --color-line: #dce4ef;
+  --color-mist: #b5c3d8;
+}
+
+@layer base {
+  html { scroll-behavior: smooth; }
+  body { @apply bg-canvas font-sans text-navy antialiased; }
+  h1, h2, h3 { letter-spacing: -0.035em; }
+  a:focus-visible, summary:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 4px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+  }
+}
+
+@layer components {
+  .shell { @apply mx-auto w-full max-w-7xl px-5 sm:px-8 lg:px-12; }
+  .button {
+    @apply inline-flex min-h-12 items-center justify-center gap-3 rounded-xl px-5 py-3 text-sm font-semibold transition-colors;
+  }
+  .button-primary { @apply bg-cobalt text-white hover:bg-blue-700; }
+  .text-link { @apply font-semibold underline underline-offset-4; }
+  .display-title { @apply text-4xl leading-[1.06] font-bold sm:text-6xl lg:text-7xl; }
+  .section-title { @apply text-3xl leading-[1.1] font-bold sm:text-5xl; }
+  .document-body { @apply max-w-3xl space-y-10 text-base leading-7 text-muted; }
+  .document-body h2 { @apply mb-3 text-2xl leading-tight font-bold text-navy; }
+  .document-body p + p { @apply mt-3; }
+  .document-body ul { @apply mt-3 list-disc space-y-2 pl-6; }
+  .document-body ol { @apply mt-3 list-decimal space-y-2 pl-6; }
+  .document-body a:not(.button) { @apply font-semibold text-cobalt underline underline-offset-4; }
+}
+

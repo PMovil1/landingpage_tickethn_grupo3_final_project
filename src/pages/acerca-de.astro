@@ -1,0 +1,30 @@
+---
+import Document from '../layouts/Document.astro';
+import { art, contactEmail } from '../site';
+
+const members = [
+  'Melvin Edgardo Peña Caballero',
+  'Christian Yahir Rodriguez Sanchez',
+  'Linda Guadalupe Nolasco Martínez',
+  'William Eduardo Banegas Cruz',
+  'José Oveniel Galdámez Ramos',
+  'Ricardo Andres Montes Jovel',
+];
+---
+<Document title="Acerca de TicketHN" description="Una app Android creada por el Grupo 3 de Programación Móvil 1 de la Universidad Tecnológica de Honduras (UTH).">
+  <section aria-labelledby="proyecto">
+    <img src={art('uth_logo.png')} width="2077" height="1273" alt="Universidad Tecnológica de Honduras" class="mb-7 h-auto w-28" />
+    <h2 id="proyecto">El proyecto</h2>
+    <p>TicketHN reúne en una app la exploración de eventos en Honduras, la consulta de precios y recintos, y el acceso a boletos digitales de muestra. El proyecto combina una aplicación nativa para Android con una API que gestiona el registro, la verificación del correo y el inicio de sesión.</p>
+  </section>
+  <section aria-labelledby="equipo">
+    <h2 id="equipo">Integrantes del Grupo 3</h2>
+    <div class="mt-4 grid gap-x-6 sm:grid-cols-2">
+      {members.map((name) => <p class="border-b border-line py-3 !mt-0 font-medium text-navy">{name}</p>)}
+    </div>
+  </section>
+  <section aria-labelledby="contacto">
+    <h2 id="contacto">Contacto</h2>
+    <p>Para consultas sobre el proyecto, escribe a <a class="break-all" href={'mailto:' + contactEmail}>{contactEmail}</a>.</p>
+  </section>
+</Document>

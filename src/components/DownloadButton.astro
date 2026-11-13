@@ -1,0 +1,21 @@
+---
+import { art, googlePlayUrl } from '../site';
+
+interface Props {
+  compact?: boolean;
+}
+
+const { compact = false } = Astro.props;
+---
+<a
+  href={googlePlayUrl}
+  class="inline-block max-w-full rounded-lg align-middle hover:opacity-90 motion-safe:transition-opacity"
+>
+  <img
+    src={art('google-play-es-419.png')}
+    width="646"
+    height="250"
+    alt="Descargar TicketHN en Google Play"
+    class:list={['h-auto max-w-full', compact ? 'w-31' : 'w-44']}
+  />
+</a>

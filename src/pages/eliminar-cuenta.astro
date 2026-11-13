@@ -1,0 +1,21 @@
+---
+import Document from '../layouts/Document.astro';
+import { contactEmail, deletionEmail, path } from '../site';
+---
+<Document title="Eliminar mi cuenta de TicketHN" description="Solicita por correo la eliminación de tu cuenta y los datos asociados. Puedes enviar la solicitud aunque ya hayas desinstalado la app.">
+  <section aria-labelledby="solicitud">
+    <h2 id="solicitud">Enviar una solicitud</h2>
+    <ol>
+      <li>Escribe a <a class="break-all" href={deletionEmail}>{contactEmail}</a> desde el correo asociado a tu cuenta de TicketHN.</li>
+      <li>Indica que quieres eliminar tu cuenta y los datos asociados. Si escribes desde otra dirección, incluye el correo registrado para que el equipo pueda verificar la titularidad. Mantén en privado tu contraseña y tus códigos de verificación.</li>
+      <li>El equipo te responderá por correo para confirmar la solicitud, indicar el plazo de atención y comunicar el resultado.</li>
+    </ol>
+    <a class="button button-primary mt-6" href={deletionEmail}>Solicitar eliminación por correo</a>
+  </section>
+  <section aria-labelledby="alcance">
+    <h2 id="alcance">Datos que cubre la solicitud</h2>
+    <p>La solicitud cubre tu perfil de cuenta, nombre, correo, credenciales, códigos de autenticación, sesiones y registros asociados. Si algún dato debe conservarse por seguridad, prevención de fraude u obligación legal, el equipo te indicará el motivo y el plazo aplicable.</p>
+    <p>Para retirar también las preferencias y datos de muestra del dispositivo, abre los ajustes de Android, selecciona TicketHN y borra el almacenamiento de la app.</p>
+    <p>Consulta la <a href={path('privacidad/')}>Política de privacidad</a> para conocer el tratamiento de tus datos.</p>
+  </section>
+</Document>

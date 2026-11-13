@@ -1,11 +1,143 @@
 ---
-import Welcome from '../components/Welcome.astro';
+import DownloadButton from '../components/DownloadButton.astro';
+import EventHero from '../components/EventHero.astro';
 import Layout from '../layouts/Layout.astro';
+import { art, path } from '../site';
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+const steps = [
+  {
+    title: 'Encuentra tu próximo plan',
+    text: 'Busca por nombre o combina filtros de ciudad, fecha, categoría y precio para explorar el catálogo de muestra.',
+    icon: 'M10.5 17a6.5 6.5 0 1 0 0-13 6.5 6.5 0 0 0 0 13Zm5-2 5 5',
+  },
+  {
+    title: 'Decide con los detalles a mano',
+    text: 'Consulta fechas, recintos y precios en lempiras antes de elegir un evento.',
+    icon: 'M5 6h14v14H5zM8 4v4m8-4v4M5 10h14',
+  },
+  {
+    title: 'Abre tu boleto en segundos',
+    text: 'En Mis boletos puedes consultar la localidad, el código QR de muestra y el mapa del recinto.',
+    icon: 'M3 8h18v3a2 2 0 0 0 0 4v3H3v-3a2 2 0 0 0 0-4V8Zm12 0v2m0 2v2m0 2v2',
+  },
+];
+
+const questions = [
+  { title: '¿Puedo comprar entradas reales?', text: 'Los eventos, boletos y pagos de TicketHN son de demostración. Los códigos QR de muestra carecen de validez para entrar a eventos reales.' },
+  { title: '¿Cómo creo una cuenta?', text: 'Regístrate en la app con tu nombre y correo electrónico. TicketHN te enviará un código para verificar tu dirección.' },
+  { title: '¿Dónde veo mis boletos?', text: 'Abre Mis boletos y selecciona una entrada de muestra. Puedes consultar sus datos y ver dónde queda el recinto.' },
+];
 ---
+<Layout title="TicketHN | Descubre eventos en Honduras" description="Explora eventos en Honduras y conoce la experiencia de llevar tus boletos digitales en Android. Proyecto académico del Grupo 3 de la UTH." home>
+  <EventHero />
 
-<Layout>
-	<Welcome />
+  <section id="experiencia" aria-labelledby="experiencia-titulo" class="scroll-mt-6 bg-white">
+    <div class="shell grid items-center gap-10 py-16 sm:py-24 lg:grid-cols-[1fr_1fr] lg:gap-20 lg:py-28">
+      <div>
+        <h2 id="experiencia-titulo" class="text-4xl leading-[1.03] font-extrabold text-balance sm:text-5xl lg:text-6xl">Del primer vistazo a tu <span class="text-cobalt">boleto QR.</span></h2>
+        <ul class="mt-7 divide-y divide-line sm:mt-9">
+          {steps.map(({ title, text, icon }) => (
+            <li class="grid grid-cols-[auto_1fr] items-start gap-4 py-5 sm:gap-5">
+              <span class="grid size-11 place-items-center rounded-xl bg-blue-50 text-cobalt">
+                <svg class="size-5" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d={icon} /></svg>
+              </span>
+              <div>
+                <h3 class="text-lg font-bold sm:text-xl">{title}</h3>
+                <p class="mt-1.5 max-w-lg leading-relaxed text-muted">{text}</p>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <figure class="ticket-stage relative isolate grid min-w-0 place-items-center overflow-hidden rounded-3xl bg-night px-8 pt-9 pb-14 sm:aspect-square lg:aspect-[5/6]">
+        <img src={art('onboarding_tickets.webp')} alt="Boleto digital de muestra con código QR, fecha y asiento" width="1080" height="1500" loading="lazy" decoding="async" class="ticket-art relative w-full max-w-72 sm:max-w-80" />
+        <figcaption class="absolute inset-x-0 bottom-5 text-center text-sm font-medium text-mist">Boleto de demostración</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section aria-labelledby="preguntas" class="border-y border-line">
+    <div class="shell grid gap-8 py-16 sm:py-24 lg:grid-cols-[0.8fr_1fr] lg:gap-20">
+      <div>
+        <h2 id="preguntas" class="section-title">Preguntas frecuentes</h2>
+        <a href={path('acerca-de/')} class="text-link mt-5 inline-block text-cobalt">Conoce el proyecto</a>
+      </div>
+      <div class="divide-y divide-line border-y border-line">
+        {questions.map(({ title, text }) => (
+          <details class="group">
+            <summary class="flex min-h-16 cursor-pointer list-none items-center justify-between gap-4 py-4 text-lg font-semibold hover:text-cobalt [&::-webkit-details-marker]:hidden">
+              {title}
+              <span class="grid size-8 shrink-0 place-items-center rounded-full bg-white text-cobalt ring-1 ring-line group-open:bg-cobalt group-open:text-white group-open:ring-cobalt">
+                <svg class="size-4 transition-transform group-open:rotate-180 motion-reduce:transition-none" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>
+              </span>
+            </summary>
+            <p class="max-w-xl pb-5 pr-8 leading-relaxed text-muted">{text}</p>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section id="android" aria-labelledby="descarga" class="shell scroll-mt-6 py-12 sm:py-20">
+    <div class="download-ticket relative isolate grid gap-6 rounded-3xl bg-navy text-white sm:grid-cols-[1fr_auto] sm:items-stretch sm:gap-0">
+      <div class="px-6 pt-8 sm:px-10 sm:py-12 lg:px-14 lg:py-14">
+        <h2 id="descarga" class="section-title">Lleva TicketHN contigo.</h2>
+        <p class="mt-4 max-w-lg leading-relaxed text-mist sm:text-lg">
+          Abre la ficha de TicketHN en Google Play para consultar su disponibilidad e instalar la app.
+        </p>
+      </div>
+      <div class="ticket-stub relative flex items-center border-t border-dashed border-white/40 p-6 sm:border-t-0 sm:border-l sm:p-10 lg:px-14">
+        <DownloadButton />
+      </div>
+    </div>
+  </section>
 </Layout>
+
+<style>
+  .ticket-stage {
+    background: radial-gradient(ellipse at 50% 50%, #1946a5 0%, #0b1f4d 58%, #091429 100%);
+  }
+
+  .ticket-stage::before {
+    position: absolute;
+    inset: 10% 15%;
+    z-index: -1;
+    content: "";
+    border: 1px solid rgb(181 195 216 / 22%);
+    border-radius: 50% 50% 12px 12px;
+  }
+
+  .ticket-stub::before,
+  .ticket-stub::after {
+    position: absolute;
+    top: -.7rem;
+    width: 1.4rem;
+    height: 1.4rem;
+    content: "";
+    border-radius: 50%;
+    background: var(--color-canvas);
+    pointer-events: none;
+  }
+
+  .ticket-stub::before { left: -.7rem; }
+  .ticket-stub::after { right: -.7rem; }
+
+  @media (width >= 40rem) {
+    .ticket-stub::after {
+      inset: auto auto -.7rem -.7rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .ticket-art {
+      transition: transform 650ms cubic-bezier(.22, 1, .36, 1);
+    }
+
+    @media (hover: hover) {
+      .ticket-stage:hover .ticket-art {
+        transform: translateY(-7px) rotate(-2deg) scale(1.025);
+      }
+    }
+  }
+</style>

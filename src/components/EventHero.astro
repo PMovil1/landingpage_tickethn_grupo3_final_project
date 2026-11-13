@@ -1,0 +1,270 @@
+---
+import DownloadButton from './DownloadButton.astro';
+import { art } from '../site';
+
+const scenes = [
+  { name: 'Festivales', image: 'home_festival.webp', position: '60%', width: 1200, height: 480 },
+  { name: 'Deportes', image: 'home_football.webp', position: '50%', width: 1200, height: 480 },
+  { name: 'Conciertos', image: 'home_concert.webp', position: '25%', width: 1200, height: 444 },
+  { name: 'Teatro', image: 'home_theater_cover.webp', position: '55%', width: 1000, height: 400 },
+];
+---
+<section class="hero relative isolate overflow-hidden bg-night text-white" aria-labelledby="portada">
+  <div class="hero-stage absolute inset-0 -z-10 overflow-hidden" aria-hidden="true">
+    {scenes.map(({ name, image, position, width, height }, index) => (
+      <img
+        data-scene={name}
+        data-active={index === 0 ? 'true' : 'false'}
+        class="scene absolute inset-0 h-full w-full object-cover"
+        style={`--focal-point: ${position}`}
+        src={art(image)}
+        width={width}
+        height={height}
+        fetchpriority={index === 0 ? 'high' : 'low'}
+        alt=""
+      />
+    ))}
+  </div>
+
+  <div class="shell hero-content flex flex-col justify-end gap-12 pb-6 sm:pb-8 lg:gap-16">
+    <div class="hero-copy flex flex-1 flex-col md:block md:flex-none">
+      <h1 id="portada" class="max-w-4xl text-[clamp(2.75rem,8.3vw,6.8rem)] leading-[0.94] font-extrabold tracking-[-0.06em]">
+        <span class="block">Honduras</span>
+        <span class="block">se vive en vivo.</span>
+      </h1>
+      <p class="mt-5 max-w-md text-base leading-relaxed text-white/85 sm:mt-7 sm:text-xl">
+        Descubre conciertos, deportes y más. Explora cómo llevar tus boletos digitales en TicketHN para Android.
+      </p>
+      <div class="mt-auto flex flex-wrap items-center gap-x-6 gap-y-3 pt-7 md:mt-9 md:pt-0">
+        <DownloadButton />
+        <a href="#experiencia" class="group inline-flex min-h-12 items-center gap-2 text-sm font-semibold hover:underline hover:underline-offset-4">
+          Explorar la app
+          <svg class="size-4 transition-transform group-hover:translate-y-1 motion-reduce:transition-none" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 4v15m-6-6 6 6 6-6" /></svg>
+        </a>
+      </div>
+    </div>
+
+    <event-gallery class="hidden md:block" aria-label="Galería de categorías" role="group">
+      <div data-controls hidden>
+        <div class="grid grid-cols-[1fr_auto] items-center gap-x-4 gap-y-4 md:gap-x-10">
+          <div class="flex items-center gap-3 text-sm font-semibold">
+            <span class="size-2 rounded-full bg-emerald" aria-hidden="true"></span>
+            <span data-caption aria-live="polite" aria-atomic="true">{scenes[0].name}</span>
+          </div>
+          <div class="col-start-2 flex gap-2 md:row-span-2">
+            <button type="button" data-rotation class="gallery-arrow" aria-label="Pausar carrusel">
+              <svg class="size-5" data-pause-icon aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M9 5v14m6-14v14" /></svg>
+              <svg class="size-5" data-play-icon hidden aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="m9 5 11 7-11 7z" /></svg>
+            </button>
+            {[
+              { direction: -1, label: 'Imagen anterior', arrow: 'm14 6-6 6 6 6' },
+              { direction: 1, label: 'Imagen siguiente', arrow: 'm10 6 6 6-6 6' },
+            ].map(({ direction, label, arrow }) => (
+              <button type="button" data-direction={direction} class="gallery-arrow" aria-label={label}>
+                <svg class="size-5" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d={arrow} /></svg>
+              </button>
+            ))}
+          </div>
+          <div class="col-span-2 grid grid-cols-2 gap-x-3 md:col-span-1 md:grid-cols-4" aria-label="Elegir categoría" role="group">
+            {scenes.map(({ name }, index) => (
+              <button class="gallery-category" type="button" data-category={index} aria-pressed={index === 0 ? 'true' : 'false'}>
+                {name}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+    </event-gallery>
+  </div>
+</section>
+
+<script>
+  class EventGallery extends HTMLElement {
+    private timer?: number;
+    private restartRotation?: () => void;
+
+    disconnectedCallback() {
+      window.clearInterval(this.timer);
+    }
+
+    connectedCallback() {
+      if (this.restartRotation) {
+        this.restartRotation();
+        return;
+      }
+
+      const hero = this.closest('section');
+      const stage = hero?.querySelector<HTMLElement>('.hero-stage');
+      const scenes = [...(stage?.querySelectorAll<HTMLImageElement>('[data-scene]') ?? [])];
+      const categories = [...this.querySelectorAll<HTMLButtonElement>('[data-category]')];
+      const controls = this.querySelector<HTMLElement>('[data-controls]');
+      const caption = this.querySelector<HTMLElement>('[data-caption]');
+      const rotationButton = this.querySelector<HTMLButtonElement>('[data-rotation]');
+      if (!hero || !controls || !caption || !rotationButton || scenes.length < 2 || scenes.length !== categories.length) return;
+      let active = 0;
+      let rotating = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const playIcon = rotationButton.querySelector('[data-play-icon]');
+      const pauseIcon = rotationButton.querySelector('[data-pause-icon]');
+
+      function select(index: number) {
+        const next = (index + scenes.length) % scenes.length;
+        if (next === active) return;
+        scenes[active].dataset.active = 'false';
+        categories[active].setAttribute('aria-pressed', 'false');
+        active = next;
+        scenes[active].dataset.active = 'true';
+        categories[active].setAttribute('aria-pressed', 'true');
+        if (caption) caption.textContent = scenes[active].dataset.scene ?? '';
+      }
+
+      const restartRotation = () => {
+        window.clearInterval(this.timer);
+        if (rotating) {
+          this.timer = window.setInterval(() => {
+            if (!document.hidden) select(active + 1);
+          }, 3000);
+        }
+      };
+      this.restartRotation = restartRotation;
+
+      const updateRotationControl = () => {
+        rotationButton.setAttribute('aria-label', rotating ? 'Pausar carrusel' : 'Reproducir carrusel');
+        playIcon?.toggleAttribute('hidden', rotating);
+        pauseIcon?.toggleAttribute('hidden', !rotating);
+        caption.setAttribute('aria-live', rotating ? 'off' : 'polite');
+        restartRotation();
+      };
+
+      function selectManually(index: number) {
+        select(index);
+        restartRotation();
+      }
+
+      rotationButton.addEventListener('click', () => {
+        rotating = !rotating;
+        updateRotationControl();
+      });
+
+      this.querySelectorAll<HTMLButtonElement>('[data-direction]').forEach((button) => {
+        button.addEventListener('click', () => selectManually(active + Number(button.dataset.direction)));
+      });
+      categories.forEach((button, index) => {
+        button.addEventListener('click', () => selectManually(index));
+      });
+      this.addEventListener('keydown', (event) => {
+        if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
+        event.preventDefault();
+        selectManually(active + (event.key === 'ArrowLeft' ? -1 : 1));
+        if (categories.some((button) => button === event.target)) categories[active].focus();
+      });
+
+      let start: Touch | undefined;
+      hero.addEventListener('touchstart', (event) => {
+        const target = event.target;
+        start = event.touches.length === 1 && target instanceof Element && !target.closest('a, button')
+          ? event.touches[0]
+          : undefined;
+      }, { passive: true });
+      hero.addEventListener('touchcancel', () => { start = undefined; });
+      hero.addEventListener('touchend', (event) => {
+        const end = event.changedTouches[0];
+        if (!start || !end || start.identifier !== end.identifier) return;
+        const horizontal = end.clientX - start.clientX;
+        const vertical = end.clientY - start.clientY;
+        start = undefined;
+        if (Math.abs(horizontal) >= 55 && Math.abs(horizontal) > Math.abs(vertical) * 1.5) {
+          selectManually(active + (horizontal < 0 ? 1 : -1));
+        }
+      }, { passive: true });
+
+      updateRotationControl();
+      controls.hidden = false;
+    }
+  }
+
+  if (!customElements.get('event-gallery')) customElements.define('event-gallery', EventGallery);
+</script>
+
+<style>
+  @reference "../styles/global.css";
+
+  .hero-stage::after {
+    position: absolute;
+    inset: 0;
+    content: "";
+    background:
+      linear-gradient(0deg, #091429 1%, rgb(9 20 41 / 83%) 22%, transparent 66%),
+      linear-gradient(90deg, rgb(9 20 41 / 96%) 1%, rgb(9 20 41 / 78%) 25%, rgb(9 20 41 / 14%) 72%);
+  }
+
+  .scene {
+    opacity: 0;
+    object-position: var(--focal-point) center;
+  }
+
+  .scene[data-active="true"] {
+    opacity: 1;
+  }
+
+  .hero-content {
+    min-height: clamp(38rem, 78svh, 52rem);
+    padding-top: clamp(9rem, 31svh, 20rem);
+  }
+
+  .gallery-arrow {
+    @apply grid size-11 cursor-pointer place-items-center rounded-full border border-white/35 text-white hover:border-white hover:bg-white hover:text-night;
+  }
+
+  .gallery-category {
+    @apply min-h-11 cursor-pointer border-t-2 border-white/30 py-2 text-left text-sm font-medium text-white/75 hover:border-white/65 hover:text-white;
+  }
+
+  .gallery-category[aria-pressed="true"] {
+    @apply border-emerald text-white;
+  }
+
+  .gallery-arrow:focus-visible,
+  .gallery-category:focus-visible {
+    outline: 2px solid white;
+    outline-offset: 3px;
+  }
+
+  @media (width < 48rem) {
+    .hero-stage::after {
+      background: linear-gradient(0deg, #091429 2%, rgb(9 20 41 / 98%) 23%, rgb(9 20 41 / 78%) 49%, rgb(9 20 41 / 4%) 84%);
+    }
+
+    .hero-content {
+      min-height: 72svh;
+      padding-top: clamp(12rem, 43vw, 21rem);
+    }
+
+    .scene {
+      height: 76%;
+    }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .hero-copy {
+      animation: hero-arrival 700ms cubic-bezier(.22, 1, .36, 1) both;
+    }
+
+    .scene {
+      transform: scale(1.045);
+      transition: opacity 480ms ease, transform 1150ms cubic-bezier(.22, 1, .36, 1);
+    }
+
+    .scene[data-active="true"] {
+      transform: scale(1);
+    }
+
+    .gallery-category, .gallery-arrow {
+      transition: background-color 180ms ease, border-color 180ms ease, color 180ms ease;
+    }
+
+    @keyframes hero-arrival {
+      from { opacity: .75; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  }
+</style>
